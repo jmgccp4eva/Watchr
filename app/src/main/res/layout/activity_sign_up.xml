@@ -90,6 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:drawableEnd="@drawable/ic_pass"
+            android:inputType="textPassword"
             android:fontFamily="@font/poppinsbold"
             android:textColorHint="#757575"
             app:hintTextColor="#757575" />
@@ -115,6 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:drawableEnd="@drawable/ic_pass"
+            android:inputType="textPassword"
             android:fontFamily="@font/poppinsbold"
             android:textColorHint="#757575"
             app:hintTextColor="#757575" />

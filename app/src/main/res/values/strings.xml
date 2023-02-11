@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WatchrRev1</string>
+    <string name="app_name">Watchr</string>
     <string name="sign_up">Sign Up</string>
     <string name="name">Name</string>
     <string name="error">Error!</string>
@@ -7,4 +7,11 @@
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="haveAccount">Already have an account?  Log in</string>
+    <string name="name_required">Name required</string>
+    <string name="passwordsMustMatch">Passwords must match</string>
+    <string name="conf_pass_required">Confirm password required</string>
+    <string name="invalid_pass">Invalid password</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="email_required">Email required</string>
+    <string name="pass_required">Password required</string>
 </resources>
