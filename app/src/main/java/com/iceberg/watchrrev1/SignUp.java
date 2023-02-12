@@ -2,6 +2,8 @@ package com.iceberg.watchrrev1;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +34,8 @@ import java.util.regex.Pattern;
 
 public class SignUp extends AppCompatActivity {
 
+    private SharedPreferences sharedPreferences;
+
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("[a-zA-Z0-9]{1,}"+
                     "\\@" +
@@ -50,6 +54,9 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         String url = this.getApplicationContext().getString(R.string.my_url);
+
+        sharedPreferences = this.getSharedPreferences("com.iceberg.watchrrev1",Context.MODE_PRIVATE);
+
 
         // Find all the views
         tiName = findViewById(R.id.tiName);
@@ -89,13 +96,39 @@ public class SignUp extends AppCompatActivity {
                     email = Objects.requireNonNull(tiEmail.getText()).toString().trim();
                     password = Objects.requireNonNull(tiPass.getText()).toString().trim();
                     String built = url+"signup.php?name="+my_name+"&password="+password+"&email="+email;
-                    Log.i("PUT_DATA",built);
                     RequestQueue requestQueue = Volley.newRequestQueue(this);
                     StringRequest stringRequest = new StringRequest(Request.Method.GET, built,
-                            response -> {
-                                Toast.makeText(SignUp.this, response,Toast.LENGTH_LONG).show();
+                            full_response -> {
+                                String[] split = full_response.split("~~~");
+                                Log.i("PUT_DATA",split[0]);
+                                String response = split[0];
+                                String user_id = split[1];
                                 Log.i("PUT_DATA",response);
+                                Log.i("PUT_DATA",user_id);
+                                if(response.equals("Success")){
+                                    sharedPreferences.edit().putString("user_name",my_name).apply();
+                                    sharedPreferences.edit().putBoolean("isRegistered",true).apply();
+                                    sharedPreferences.edit().putInt("userID",Integer.parseInt(user_id)).apply();
+                                    sharedPreferences.edit().putBoolean("isLoggedIn",true).apply();
+                                    String user_name = sharedPreferences.getString("user_name","");
+                                    Log.i("PUT_DATA","User "+user_name+" registered");
+                                    Intent intent = new Intent(SignUp.this,Home.class);
+                                    startActivity(intent);
+                                    finish();
+                                }else if(response.equals("User already exists!\nPlease log in instead.")) {
+                                    Toast.makeText(SignUp.this,response,Toast.LENGTH_LONG).show();
+                                    try{
+                                        String user_name = sharedPreferences.getString("user_name","");
+                                        Log.i("PUT_DATA","already exists:"+user_name);
+                                    }catch (Exception e){
+                                        Log.i("PUT_DATA","User info not available");
+                                    }
 
+
+                                }else{
+                                    Toast.makeText(SignUp.this,"Error.  That didn't work\n"+response,Toast.LENGTH_LONG).show();
+                                    Log.i("PUT_DATA",response);
+                                }
                             }, error -> {
                                 Toast.makeText(SignUp.this,"That didn't work",Toast.LENGTH_LONG).show();
                                 Log.i("PUT_DATA",error.toString());
