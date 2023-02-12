@@ -98,18 +98,21 @@ public class SignUp extends AppCompatActivity {
                     String built = url+"signup.php?name="+my_name+"&password="+password+"&email="+email;
                     RequestQueue requestQueue = Volley.newRequestQueue(this);
                     StringRequest stringRequest = new StringRequest(Request.Method.GET, built,
-                            full_response -> {
-                                String[] split = full_response.split("~~~");
+                            response -> {
+                                String[] split = response.split("~~~");
                                 Log.i("PUT_DATA",split[0]);
-                                String response = split[0];
+                                response = split[0];
                                 String user_id = split[1];
                                 Log.i("PUT_DATA",response);
                                 Log.i("PUT_DATA",user_id);
                                 if(response.equals("Success")){
                                     sharedPreferences.edit().putString("user_name",my_name).apply();
                                     sharedPreferences.edit().putBoolean("isRegistered",true).apply();
-                                    sharedPreferences.edit().putInt("userID",Integer.parseInt(user_id)).apply();
+                                    sharedPreferences.edit().putInt("user_id",Integer.parseInt(user_id)).apply();
                                     sharedPreferences.edit().putBoolean("isLoggedIn",true).apply();
+                                    sharedPreferences.edit().putString("email",email).apply();
+                                    Log.i("PUT_DATA",sharedPreferences.getString("email",""));
+                                    Log.i("PUT_DATA",""+sharedPreferences.getInt("user_id",-1));
                                     String user_name = sharedPreferences.getString("user_name","");
                                     Log.i("PUT_DATA","User "+user_name+" registered");
                                     Intent intent = new Intent(SignUp.this,Home.class);
@@ -123,8 +126,6 @@ public class SignUp extends AppCompatActivity {
                                     }catch (Exception e){
                                         Log.i("PUT_DATA","User info not available");
                                     }
-
-
                                 }else{
                                     Toast.makeText(SignUp.this,"Error.  That didn't work\n"+response,Toast.LENGTH_LONG).show();
                                     Log.i("PUT_DATA",response);
@@ -141,6 +142,11 @@ public class SignUp extends AppCompatActivity {
                 tvConfPassErrorSU.setVisibility(View.VISIBLE);
                 tvPassErrorSU.setVisibility(View.VISIBLE);
             }
+        });
+
+        tvHaveAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(SignUp.this,LogIn.class);
+            startActivity(intent);
         });
     }
 
